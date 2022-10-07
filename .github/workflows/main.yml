@@ -1,9 +1,16 @@
 name: replace 0.0.0.0 with 127.0.0.1
 
 on: 
+  release:
+    types: [published]
+  push:
+    tags:
+    - 'v*'
+#    branches: 
+#      - master
   schedule:
     # - cron: "0 0/6 * * *"
-    - cron: "0/30 0/1 * * *"
+    - cron: "0 0 * * *"
   watch:
     types: [started]
    
@@ -25,16 +32,13 @@ jobs:
       run: | 
         echo `date +"%Y-%m-%d %H:%M:%S"` begin > time.log
         python main.py   
-    - name: download rclone.conf
+    - name: Commit
       run: |
-        curl -L ${{ secrets.HMMMM_RCLONE_CONF_DOWNLOAD_URL }} > /home/runner/rclone.conf
-    - name: install rclone
-      run: |
-        curl https://rclone.org/install.sh | sudo bash
-    - name: upload
-      run: |
-        rclone --config /home/runner/rclone.conf copy ./ dropbox:personalDNSfilter_blocklist -vv > ./rclone.log
-        rclone --config /home/runner/rclone.conf copy ./rclone.log dropbox:personalDNSfilter_blocklist
-    - name: delete rclone.conf
-      run: |
-        rm -f /home/runner/rclone.conf
+        git config --global user.email "57046712+not-lucky@users.noreply.github.com"
+        git config --global user.name "not-lucky"
+        git add .
+        git commit -m "Update new blocklist" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.HMMMM_GITHUB_TOKEN }}
