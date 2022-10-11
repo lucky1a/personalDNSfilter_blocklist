@@ -34,8 +34,8 @@ jobs:
         python main.py   
     - name: Commit
       run: |
-        git config --global user.email "57046712+not-lucky@users.noreply.github.com"
-        git config --global user.name "not-lucky"
+        git config --global user.email "115266995+lucky1a@users.noreply.github.com"
+        git config --global user.name "lucky1a"
         git add .
         git commit -m "Update new blocklist" -a
     - name: Push changes
